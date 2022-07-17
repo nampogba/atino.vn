@@ -1,5 +1,5 @@
 
-window._ = require('lodash');
+window._ = require("lodash");
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -8,11 +8,9 @@ window._ = require('lodash');
  */
 
 try {
-    window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap');
-} catch (e) {}
+    // window.$ = window.jQuery = require('jquery');
+    // require('bootstrap-sass');
+} catch (e) { }
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -20,9 +18,9 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require('axios');
+window.axios = require("axios");
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -33,9 +31,19 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    console.error(
+        "CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token"
+    );
+}
+
+let apiToken = document.head.querySelector('meta[name="api-token"]');
+if (apiToken) {
+    window.axios.defaults.headers.common["Authorization"] =
+        "Bearer " + apiToken.content;
+} else {
+    console.error("API Token is not found. Please contact Admin");
 }
 
 /**
@@ -50,7 +58,34 @@ if (token) {
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     key: 'your-pusher-key',
+//     cluster: 'mt1',
 //     encrypted: true
 // });
+
+/**
+ * Register progress bar event
+ */
+// window.axios.interceptors.request.use(
+//     config => {
+//         NProgress.start();
+//         return config;
+//     },
+//     error => {
+//         console.log("request", error);
+//         return Promise.reject(error);
+//     }
+// );
+//
+// window.axios.interceptors.response.use(
+//     response => {
+//         // let loading = document.getElementById("loading");
+//         // loading.style.display = "none";
+//         NProgress.done();
+//         return response;
+//     },
+//     error => {
+//         NProgress.done();
+//         return Promise.reject(error);
+//     }
+// );
